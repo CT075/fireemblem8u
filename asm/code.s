@@ -45813,7 +45813,7 @@ sub_80A05BC: @ 0x080A05BC
 	bl sub_80B5268
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
-	bl sub_8024E20
+	bl AddToPartyGold
 	ldr r1, [r4, #0x2c]
 	ldrb r0, [r5]
 	lsls r0, r0, #1
@@ -79794,7 +79794,7 @@ _080B0DF0:
 	cmp r0, #0x9f
 	bne _080B0DFC
 	ldr r0, _080B0E24  @ 0x00000BB8
-	bl sub_8024E20
+	bl AddToPartyGold
 _080B0DFC:
 	ldr r0, [r7]
 	adds r0, r0, r4
@@ -79802,7 +79802,7 @@ _080B0DFC:
 	cmp r0, #0xa0
 	bne _080B0E0C
 	ldr r0, _080B0E28  @ 0x00001388
-	bl sub_8024E20
+	bl AddToPartyGold
 _080B0E0C:
 	ldrb r0, [r6]
 	bl sub_80B0A24

@@ -95,6 +95,7 @@ SECTIONS
         src/bmio.o(.text);
         asm/bmcontainer.o(.text);
         asm/bmusort.o(.text);
+        src/bmarena.o(.text);
         asm/bmarena.o(.text);
         asm/bmmind.o(.text);
         asm/bmpatharrowdisp.o(.text);

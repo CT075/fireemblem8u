@@ -536,7 +536,7 @@ extern u8 gWorkingMovementScript[];
 // extern ??? gUnknown_0203A8E4
 // extern ??? gUnknown_0203A8E8
 // extern ??? gUnknown_0203A8EC
-extern struct ArenaData gUnknown_0203A8F0;
+extern struct ArenaData gArenaData;
 extern struct Unit gUnknown_0203A910; // arena opponent unit
 extern struct ActionData gActionData;
 // extern ??? gUnknown_0203A95E

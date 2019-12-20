@@ -89215,7 +89215,7 @@ _080B596C: .4byte gUnknown_089AC024
 	THUMB_FUNC_START sub_80B5970
 sub_80B5970: @ 0x080B5970
 	push {lr}
-	ldr r0, _080B598C  @ gUnknown_0203A8F0
+	ldr r0, _080B598C  @ gArenaData
 	ldr r0, [r0]
 	ldr r1, _080B5990  @ gBattleActor
 	bl UpdateUnitFromBattle
@@ -89226,7 +89226,7 @@ sub_80B5970: @ 0x080B5970
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080B598C: .4byte gUnknown_0203A8F0
+_080B598C: .4byte gArenaData
 _080B5990: .4byte gBattleActor
 _080B5994: .4byte gActiveUnit
 
@@ -89234,7 +89234,7 @@ _080B5994: .4byte gActiveUnit
 sub_80B5998: @ 0x080B5998
 	push {lr}
 	adds r2, r0, #0
-	ldr r0, _080B59B8  @ gUnknown_0203A8F0
+	ldr r0, _080B59B8  @ gArenaData
 	ldr r0, [r0]
 	ldr r0, [r0, #0xc]
 	lsrs r0, r0, #0x11
@@ -89248,7 +89248,7 @@ sub_80B5998: @ 0x080B5998
 	bl sub_80B5C04
 	b _080B59C4
 	.align 2, 0
-_080B59B8: .4byte gUnknown_0203A8F0
+_080B59B8: .4byte gArenaData
 _080B59BC:
 	ldr r0, _080B59C8  @ 0x000008D1
 	adds r1, r2, #0
@@ -89583,7 +89583,7 @@ sub_80B5C48: @ 0x080B5C48
 	bl sub_801443C
 	adds r0, r4, #0
 	adds r0, #8
-	ldr r5, _080B5CDC  @ gUnknown_0203A8F0
+	ldr r5, _080B5CDC  @ gArenaData
 	ldr r1, [r5, #4]
 	movs r2, #8
 	ldrsb r2, [r1, r2]
@@ -89622,7 +89622,7 @@ sub_80B5C48: @ 0x080B5C48
 	.align 2, 0
 _080B5CD4: .4byte gUnknown_02022F38
 _080B5CD8: .4byte gMid_Lv
-_080B5CDC: .4byte gUnknown_0203A8F0
+_080B5CDC: .4byte gArenaData
 
 	THUMB_FUNC_START sub_80B5CE0
 sub_80B5CE0: @ 0x080B5CE0

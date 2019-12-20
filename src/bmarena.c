@@ -153,6 +153,7 @@ u8 sub_803190C(u8 classid) {
     playerUnit = gArenaData.playerUnit;
     flagthing = ((playerUnit->pCharacterData->attributes | playerUnit->pClassData->attributes) & 0x0100);
 
+    // just before _0803197E
     if (*something != 0) {
     }
 }

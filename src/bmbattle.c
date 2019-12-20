@@ -435,7 +435,7 @@ void SetBattleUnitWeapon(struct BattleUnit* bu, int itemSlot) {
 
         bu->weaponSlotIndex = 0;
 
-        bu->weapon = gUnknown_0203A8F0.playerWeapon;
+        bu->weapon = gArenaData.playerWeapon;
         bu->canCounter = FALSE;
 
         break;
@@ -445,7 +445,7 @@ void SetBattleUnitWeapon(struct BattleUnit* bu, int itemSlot) {
 
         bu->weaponSlotIndex = 0;
 
-        bu->weapon = gUnknown_0203A8F0.opponentWeapon;
+        bu->weapon = gArenaData.opponentWeapon;
         bu->canCounter = FALSE;
 
         break;
@@ -2254,7 +2254,7 @@ int GetOffensiveStaffAccuracy(struct Unit* actor, struct Unit* target) {
 }
 
 void BattleGenerateArena(struct Unit* actor) {
-    struct Unit* target = gUnknown_0203A8F0.opponentUnit;
+    struct Unit* target = gArenaData.opponentUnit;
     int something = gUnknown_0202BCB0.unk3C;
 
     gBattleStats.config = BATTLE_CONFIG_REAL | BATTLE_CONFIG_ARENA;
@@ -2267,9 +2267,9 @@ void BattleGenerateArena(struct Unit* actor) {
         gBattleTarget.hpInitial = gActionData.trapType;
     }
 
-    gBattleStats.range = gUnknown_0203A8F0.range;
+    gBattleStats.range = gArenaData.range;
 
-    gBattleTarget.unit.xPos = gBattleActor.unit.xPos + gUnknown_0203A8F0.range;
+    gBattleTarget.unit.xPos = gBattleActor.unit.xPos + gArenaData.range;
     gBattleTarget.unit.yPos = gBattleActor.unit.yPos;
 
     SetBattleUnitWeapon(&gBattleActor, BU_ISLOT_ARENA_PLAYER);

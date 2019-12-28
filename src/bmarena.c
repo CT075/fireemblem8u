@@ -180,12 +180,15 @@ afterswitch:
     ctr = 0;
     loopptr = something;
 
-    for (ctr = 0 ; ctr != iters ; ctr += 1) {
+    while (1) {
         while (1) {
             cls = GetClassData(*loopptr);
-            if ((cls->attributes & 0x0100) != promoted) { break; }
+            if ((cls->attributes & 0x0100) == promoted) { break; }
             loopptr += 1;
         }
+        if (ctr == iters) { break; }
+        ctr += 1;
+        loopptr += 1;
     }
 
     return *loopptr;

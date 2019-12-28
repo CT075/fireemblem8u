@@ -1,5 +1,6 @@
 #include "global.h"
 #include "bmunit.h"
+#include "rng.h"
 
 extern u8 IsWeaponMagic(u8 weaponty);
 extern u8 GetNearLevel(u8 lv);
@@ -16,9 +17,13 @@ extern void StoreRNState(u16 *seeds);
 extern void LoadRNState(const u16 *seeds);
 extern u16 gUnknown_0203A95E;
 
+extern u8 gUnknown_0859D9FC;
+extern u8 gUnknown_0859DA4A;
+extern u8 gUnknown_0859DA22;
+
 int GetUnitBestWRankType(struct Unit *unit);
 int GetClassBestWRankType(const struct ClassData *cls);
-u8 sub_803190C(u8 classid);
+u8 sub_803190C(u32 classid);
 
 void PrepareArenaStruct(struct Unit *unit) {
     int i;
@@ -123,38 +128,66 @@ int GetClassBestWRankType(const struct ClassData *cls) {
     return result;
 }
 
-// TODO
-u8 sub_803190C(u8 classid) {
+u8 sub_803190C(u32 wpnty) {
     u8 *something;
-    struct Unit *playerUnit;
-    int flagthing;
+    u8 *loopptr;
+    int promoted;
+    int ctr;
+    const struct ClassData *cls;
+    int iters;
 
-    if (classid <= 7) {
-        // the "something" here is some struct of size 0x22
-        switch (classid) {
+    ctr = 0;
+    something = NULL;
+
+    if (wpnty <= 7) {
+        switch (wpnty) {
             case 0:
             case 1:
             case 2:
-                something = &gUnknown_0859D9FC;
+                loopptr = &gUnknown_0859D9FC;
                 break;
             case 3:
-                something = &gUnknown_0859DA4A;
+                loopptr = &gUnknown_0859DA4A;
                 break;
             case 4:
-                break;
+                // Camdar: I've no idea how to match this without the goto
+                goto afterswitch;
             case 5:
             case 6:
             case 7:
-                something = &gUnknown_0859DA22;
+                loopptr = &gUnknown_0859DA22;
                 break;
+        }
+        something = loopptr;
+    }
+afterswitch:
+
+    promoted = (
+      ( gArenaData.playerUnit->pCharacterData->attributes
+      | gArenaData.playerUnit->pClassData->attributes
+      ) & 0x0100);
+
+    if (*something != 0) {
+        for (loopptr = something ; *loopptr != 0 ; loopptr += 1) {
+            cls = GetClassData(*loopptr);
+            if ((cls->attributes & 0x0100) == promoted) {
+                ctr += 1;
+            }
         }
     }
 
-    playerUnit = gArenaData.playerUnit;
-    flagthing = ((playerUnit->pCharacterData->attributes | playerUnit->pClassData->attributes) & 0x0100);
+    iters = NextRN_N(ctr);
+    ctr = 0;
+    loopptr = something;
 
-    // just before _0803197E
-    if (*something != 0) {
+    for (ctr = 0 ; ctr != iters ; ctr += 1) {
+        while (1) {
+            cls = GetClassData(*loopptr);
+            if ((cls->attributes & 0x0100) != promoted) { break; }
+            loopptr += 1;
+        }
     }
+
+    return *loopptr;
 }
 

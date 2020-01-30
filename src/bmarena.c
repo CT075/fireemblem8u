@@ -2,13 +2,10 @@
 #include "bmunit.h"
 #include "rng.h"
 
-extern u8 IsWeaponMagic(u8 weaponty);
-extern u8 GetNearLevel(u8 lv);
 extern void LoadArenaOpponentStruct(void);
 extern void LoadArenaWeapons(void);
 extern u8 AdjustArenaOpponentPower(void);
 extern u8 PrepareBalancedArenaFight(void);
-extern short GetUnitArenaWeight(struct Unit *unit, s8 isEnemyWeaponMagic);
 extern void sub_8031EA0(void);
 extern void sub_8031EE4(u8 idk);
 extern void sub_8031FC8(void);
@@ -24,6 +21,9 @@ extern u8 gUnknown_0859DA22;
 int GetUnitBestWRankType(struct Unit *unit);
 int GetClassBestWRankType(const struct ClassData *cls);
 u8 sub_803190C(u32 classid);
+u8 IsWeaponMagic(int weaponty);
+int GetNearLevel(int lv);
+short GetUnitArenaWeight(struct Unit *unit, s8 isEnemyWeaponMagic);
 
 void PrepareArenaStruct(struct Unit *unit) {
     int i;
@@ -139,28 +139,24 @@ u8 sub_803190C(u32 wpnty) {
     ctr = 0;
     something = NULL;
 
-    if (wpnty <= 7) {
-        switch (wpnty) {
-            case 0:
-            case 1:
-            case 2:
-                loopptr = &gUnknown_0859D9FC;
-                break;
-            case 3:
-                loopptr = &gUnknown_0859DA4A;
-                break;
-            case 4:
-                // Camdar: I've no idea how to match this without the goto
-                goto afterswitch;
-            case 5:
-            case 6:
-            case 7:
-                loopptr = &gUnknown_0859DA22;
-                break;
-        }
-        something = loopptr;
+    switch (wpnty) {
+        case 0:
+        case 1:
+        case 2:
+            loopptr = &gUnknown_0859D9FC;
+            something = loopptr;
+            break;
+        case 3:
+            loopptr = &gUnknown_0859DA4A;
+            something = loopptr;
+            break;
+        case 5:
+        case 6:
+        case 7:
+            loopptr = &gUnknown_0859DA22;
+            something = loopptr;
+            break;
     }
-afterswitch:
 
     promoted = (
       ( gArenaData.playerUnit->pCharacterData->attributes
@@ -182,8 +178,7 @@ afterswitch:
 
     while (1) {
         while (1) {
-            cls = GetClassData(*loopptr);
-            if ((cls->attributes & 0x0100) == promoted) { break; }
+            if ((GetClassData(*loopptr)->attributes & 0x0100) == promoted) { break; }
             loopptr += 1;
         }
         if (ctr == iters) { break; }
@@ -193,4 +188,54 @@ afterswitch:
 
     return *loopptr;
 }
+
+/*
+u8 IsWeaponMagic(int weaponty) {
+    switch (weaponty) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+            return 0;
+        case 5:
+        case 6:
+        case 7:
+            return 1;
+    }
+}
+
+int GetNearLevel(int lv) {
+    int result;
+
+    result = lv + NextRN_N(9) - 4;
+    if (result < 0) {
+        return 1;
+    }
+    return result;
+}
+
+short GetUnitArenaWeight(struct Unit *unit, s8 isEnemyWeaponMagic) {
+    int statTotal;
+    u8 con;
+    int dmgRedStat;
+
+    statTotal = (unit->maxHP+unit->pow+unit->skl+unit->spd)*2 + unit->lck;
+    con = unit->pClassData->baseCon + unit->pCharacterData->baseCon;
+    statTotal += con;
+
+    if (isEnemyWeaponMagic) {
+        dmgRedStat = GetUnitResistance(unit);
+    }
+    else {
+        dmgRedStat = GetUnitDefense(unit);
+    }
+    statTotal += 2*dmgRedStat;
+
+    if (((unit->pCharacterData->attributes | unit->pClassData->attributes) & 0x40)) {
+        statTotal += GetUnitPower(unit);
+    }
+
+    return statTotal;
+}
+*/
 

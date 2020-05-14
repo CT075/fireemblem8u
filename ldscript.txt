@@ -34,7 +34,6 @@ SECTIONS
         src/rng.o(.text);
         src/time.o(.text);
         src/hardware.o(.text);
-        src/dma.o(.text);
         src/soundwrapper.o(.text);
         src/ramfunc.o(.text);
         src/proc.o(.text);
@@ -59,6 +58,7 @@ SECTIONS
         src/bmunit.o(.text);
         src/bmmap.o(.text);
         src/bmidoten.o(.text);
+        src/bmdebug.o(.text);
         asm/bmdebug.o(.text);
         asm/playerphase.o(.text);
         asm/koido.o(.text);
@@ -87,7 +87,7 @@ SECTIONS
         asm/bmtarget.o(.text);
         asm/bmudisp.o(.text);
         src/bmreliance.o(.text);
-        asm/bmitemuse.o(.text);
+        src/bmitemuse.o(.text);
         src/bmbattle.o(.text);
         src/bmtrade.o(.text);
         src/bmtrick.o(.text);
@@ -109,15 +109,14 @@ SECTIONS
         asm/bmtrap.o(.text);
         asm/bmarch.o(.text);
         asm/bmdifficulty.o(.text);
-        asm/cpphase.o(.text);
-        asm/cporder.o(.text);
-        asm/cpdecide.o(.text);
+        src/cp_phase.o(.text);
+        src/cp_order.o(.text);
+        src/cp_decide.o(.text);
         asm/cpperform.o(.text);
         asm/code_cpextra.o(.text);
         asm/code_sio.o(.text);
         src/uiutils.o(.text);
         src/uimenu.o(.text);
-        src/uitarget.o(.text);
         asm/ui_targetselection.o(.text);
         asm/code_battleanim.o(.text);
         asm/monstergen.o(.text);
@@ -134,67 +133,67 @@ SECTIONS
         src/m4a.o(.text);
         asm/libagbsyscall.o(.text);
         src/agb_sram.o(.text);
-        tools/agbcc/lib/libgcc.a:_ashldi3.o(.text);
-        tools/agbcc/lib/libgcc.a:_call_via_rX.o(.text);
-        tools/agbcc/lib/libgcc.a:_divsi3.o(.text);
-        tools/agbcc/lib/libgcc.a:_dvmd_tls.o(.text);
-        tools/agbcc/lib/libgcc.a:_modsi3.o(.text);
-        tools/agbcc/lib/libgcc.a:_muldi3.o(.text);
-        tools/agbcc/lib/libgcc.a:_udivsi3.o(.text);
-        tools/agbcc/lib/libgcc.a:_umodsi3.o(.text);
-        tools/agbcc/lib/libc.a:memcpy.o(.text);
-        tools/agbcc/lib/libc.a:memset.o(.text);
-        tools/agbcc/lib/libc.a:sprintf.o(.text);
-        tools/agbcc/lib/libc.a:strcpy.o(.text);
-        tools/agbcc/lib/libc.a:strlen.o(.text);
-        tools/agbcc/lib/libc.a:strstr.o(.text);
-        tools/agbcc/lib/libc.a:vfprintf.o(.text);
-        tools/agbcc/lib/libc.a:vsprintf.o(.text);
-        tools/agbcc/lib/libc.a:wsetup.o(.text);
-        tools/agbcc/lib/libc.a:dtoa.o(.text);
-        tools/agbcc/lib/libc.a:fflush.o(.text);
-        tools/agbcc/lib/libc.a:findfp.o(.text);
-        tools/agbcc/lib/libc.a:freer.o(.text);
-        tools/agbcc/lib/libc.a:fvwrite.o(.text);
-        tools/agbcc/lib/libc.a:fwalk.o(.text);
-        tools/agbcc/lib/libc.a:locale.o(.text);
-        tools/agbcc/lib/libc.a:makebuf.o(.text);
-        tools/agbcc/lib/libc.a:mallocr.o(.text);
-        tools/agbcc/lib/libc.a:mbtowc_r.o(.text);
-        tools/agbcc/lib/libc.a:memchr.o(.text);
-        tools/agbcc/lib/libc.a:memmove.o(.text);
-        tools/agbcc/lib/libc.a:mlock.o(.text);
-        /* TODO: linking this object from libc causes some libgcc functions to 
-         * get discarded. I have no idea why. */
-        /*tools/agbcc/lib/libc.a:mprec.o(.text);*/ asm/libc/mprec.o(.text);
-        tools/agbcc/lib/libc.a:s_isinf.o(.text);
-        tools/agbcc/lib/libc.a:s_isnan.o(.text);
-        tools/agbcc/lib/libc.a:sbrkr.o(.text);
-        tools/agbcc/lib/libc.a:stdio.o(.text);
-        tools/agbcc/lib/libc.a:strcmp.o(.text);
-        tools/agbcc/lib/libc.a:syscalls.o(.text);
-        tools/agbcc/lib/libc.a:writer.o(.text);
-        tools/agbcc/lib/libc.a:callocr.o(.text);
-        tools/agbcc/lib/libc.a:closer.o(.text);
-        tools/agbcc/lib/libc.a:errno.o(.text);
-        tools/agbcc/lib/libc.a:fstatr.o(.text);
-        tools/agbcc/lib/libc.a:libcfunc.o(.text);
-        tools/agbcc/lib/libc.a:lseekr.o(.text);
-        tools/agbcc/lib/libc.a:readr.o(.text);
-        tools/agbcc/lib/libgcc.a:dp-bit.o(.text);
-        tools/agbcc/lib/libgcc.a:fp-bit.o(.text);
-        tools/agbcc/lib/libgcc.a:_lshrdi3.o(.text);
-        tools/agbcc/lib/libgcc.a:_negdi2.o(.text);
+        *libgcc.a:_ashldi3.o(.text);
+        *libgcc.a:_call_via_rX.o(.text);
+        *libgcc.a:_divsi3.o(.text);
+        *libgcc.a:_dvmd_tls.o(.text);
+        *libgcc.a:_modsi3.o(.text);
+        *libgcc.a:_muldi3.o(.text);
+        *libgcc.a:_udivsi3.o(.text);
+        *libgcc.a:_umodsi3.o(.text);
+        *libc.a:memcpy.o(.text);
+        *libc.a:memset.o(.text);
+        *libc.a:sprintf.o(.text);
+        *libc.a:strcpy.o(.text);
+        *libc.a:strlen.o(.text);
+        *libc.a:strstr.o(.text);
+        *libc.a:vfprintf.o(.text);
+        *libc.a:vsprintf.o(.text);
+        *libc.a:wsetup.o(.text);
+        *libc.a:dtoa.o(.text);
+        *libc.a:fflush.o(.text);
+        *libc.a:findfp.o(.text);
+        *libc.a:freer.o(.text);
+        *libc.a:fvwrite.o(.text);
+        *libc.a:fwalk.o(.text);
+        *libc.a:locale.o(.text);
+        *libc.a:makebuf.o(.text);
+        *libc.a:mallocr.o(.text);
+        *libc.a:mbtowc_r.o(.text);
+        *libc.a:memchr.o(.text);
+        *libc.a:memmove.o(.text);
+        *libc.a:mlock.o(.text);
+        *libc.a:mprec.o(.text);
+        *libc.a:s_isinf.o(.text);
+        *libc.a:s_isnan.o(.text);
+        *libc.a:sbrkr.o(.text);
+        *libc.a:stdio.o(.text);
+        *libc.a:strcmp.o(.text);
+        *libc.a:syscalls.o(.text);
+        *libc.a:writer.o(.text);
+        *libc.a:callocr.o(.text);
+        *libc.a:closer.o(.text);
+        *libc.a:errno.o(.text);
+        *libc.a:fstatr.o(.text);
+        *libc.a:libcfunc.o(.text);
+        *libc.a:lseekr.o(.text);
+        *libc.a:readr.o(.text);
+        *libgcc.a:dp-bit.o(.text);
+        *libgcc.a:fp-bit.o(.text);
+        *libgcc.a:_lshrdi3.o(.text);
+        *libgcc.a:_negdi2.o(.text);
         asm/arm_call.o(.text);
 
         /* .rodata */
         . = ALIGN(4); src/main.o(.rodata);
         . = ALIGN(4); src/rng.o(.rodata);
         . = ALIGN(4); src/hardware.o(.rodata);
-		. = ALIGN(4); data/trig_rodata.o(.rodata);
-		. = ALIGN(4); src/fontgrp.o(.rodata);
-        . = ALIGN(4); data/face_rodata.o(.rodata);
-        . = ALIGN(4); data/scene_rodata.o(.rodata);
+        . = ALIGN(4); data/trig_rodata.o(.rodata);
+        . = ALIGN(4); src/fontgrp.o(.rodata);
+        . = ALIGN(4); src/data_face.o(.rodata);
+        . = ALIGN(4); src/data_scene.o(.rodata);
+        . = ALIGN(4); src/ap.o(.rodata);
+        . = ALIGN(4); src/data_gamecontrol.o(.rodata);
         . = ALIGN(4); src/messdecode.o(.rodata);
         . = ALIGN(4); data/const_data_D792C.o(.rodata);
         . = ALIGN(4); src/bmitem.o(.rodata);
@@ -204,11 +203,16 @@ SECTIONS
         . = ALIGN(4); src/bmbattle.o(.rodata);
         . = ALIGN(4); src/bmtrade.o(.rodata);
         . = ALIGN(4); data/const_data_D7C44.o(.rodata);
+        . = ALIGN(4); src/raw_text_jp.o(.rodata);
         . = ALIGN(4); src/bmio.o(.rodata);
         . = ALIGN(4); data/const_data_D7F5C.o(.rodata);
+        . = ALIGN(4); src/cp_phase.o(.rodata);
+        . = ALIGN(4); src/cp_order.o(.rodata);
+        . = ALIGN(4); src/cp_decide.o(.rodata);
+        . = ALIGN(4); data/const_data_D80DC.o(.rodata);
         . = ALIGN(4); src/uiutils.o(.rodata);
         . = ALIGN(4); src/uimenu.o(.rodata);
-        . = ALIGN(4); src/uitarget.o(.rodata);
+        . = ALIGN(4); src/data_uitarget.o(.rodata);
         . = ALIGN(4); data/const_data_DA3A4.o(.rodata);
         . = ALIGN(4); data/text.o(.rodata);
         . = ALIGN(4); data/const_data_1609BC.o(.rodata);
@@ -222,12 +226,12 @@ SECTIONS
         . = ALIGN(4); data/const_data_205B84.o(.rodata);
         . = ALIGN(4); src/m4a_tables.o(.rodata);
         . = ALIGN(4); data/sound_data.o(.rodata);
-        . = ALIGN(4); tools/agbcc/lib/libc.a:vfprintf.o(.rodata);
-        . = ALIGN(4); tools/agbcc/lib/libc.a:dtoa.o(.rodata);
-        . = ALIGN(4); tools/agbcc/lib/libc.a:impure.o(.rodata);
-        . = ALIGN(4); tools/agbcc/lib/libc.a:locale.o(.rodata);
-        . = ALIGN(4); /*tools/agbcc/lib/libc.a:mprec.o(.rodata);*/ data/libc_mprec.o(.rodata);
-        . = ALIGN(4); tools/agbcc/lib/libc.a:syscalls.o(.rodata);
+        . = ALIGN(4); *libc.a:vfprintf.o(.rodata);
+        . = ALIGN(4); *libc.a:dtoa.o(.rodata);
+        . = ALIGN(4); *libc.a:impure.o(.rodata);
+        . = ALIGN(4); *libc.a:locale.o(.rodata);
+        . = ALIGN(4); *libc.a:mprec.o(.rodata);
+        . = ALIGN(4); *libc.a:syscalls.o(.rodata);
 
         /* .data */
         . = ALIGN(4); src/main.o(.data);
@@ -235,7 +239,11 @@ SECTIONS
         . = ALIGN(4); src/soundwrapper.o(.data);
         . = ALIGN(4); src/proc.o(.data);
         . = ALIGN(4); src/fontgrp.o(.data);
-        . = ALIGN(4); data/data_587A40.o(.data);
+        . = ALIGN(4); src/ctc.o(.data);
+        . = ALIGN(4); src/data_face.o(.data);
+        . = ALIGN(4); src/data_scene.o(.data);
+        . = ALIGN(4); src/ap.o(.data);
+        . = ALIGN(4); src/data_gamecontrol.o(.data);
         . = ALIGN(4); src/messdecode.o(.data);
         . = ALIGN(4); data/data_591AB4.o(.data);
         . = ALIGN(4); data/data_item_icon.o(.data);
@@ -243,16 +251,24 @@ SECTIONS
         . = ALIGN(4); src/bmunit.o(.data);
         . = ALIGN(4); src/bmmap.o(.data);
         . = ALIGN(4); data/data_59A9D8.o(.data);
+        . = ALIGN(4); src/bmdebug.o(.data);
+        . = ALIGN(4); data/data_59AA7C.o(.data);
         . = ALIGN(4); src/bmreliance.o(.data);
-        . = ALIGN(4); data/data_59B9B8.o(.data);
+        . = ALIGN(4); src/bmitemuse.o(.data);
         . = ALIGN(4); src/bmbattle.o(.data);
         . = ALIGN(4); src/bmtrade.o(.data);
         . = ALIGN(4); data/data_59BC64.o(.data);
+        . = ALIGN(4); src/menu_def.o(.rodata);
+        . = ALIGN(4); data/data_59D238.o(.data);
         . = ALIGN(4); src/bmio.o(.data);
         . = ALIGN(4); data/data_59D9FC.o(.data);
+        . = ALIGN(4); src/cp_phase.o(.data);
+        . = ALIGN(4); src/cp_order.o(.data);
+        . = ALIGN(4); src/cp_decide.o(.data);
+        . = ALIGN(4); data/data_5A8004.o(.data);
         . = ALIGN(4); src/uiutils.o(.data);
         . = ALIGN(4); src/uimenu.o(.data);
-        . = ALIGN(4); src/uitarget.o(.data);
+        . = ALIGN(4); src/data_uitarget.o(.data);
         . = ALIGN(4); data/data_5B65C0.o(.data);
         . = ALIGN(4); data/data_portrait.o(.data);
         . = ALIGN(4); src/portrait_data.o(.data);
@@ -268,9 +284,9 @@ SECTIONS
         . = ALIGN(4); data/data_A01628.o(.data);
         . = ALIGN(4); data/data_chap_title.o(.data);
         . = ALIGN(4); data/data_A167C8.o(.data);
-        . = ALIGN(4); tools/agbcc/lib/libc.a:impure.o(.data);
-        . = ALIGN(4); tools/agbcc/lib/libc.a:locale.o(.data);
-        . = ALIGN(4); tools/agbcc/lib/libc.a:mallocr.o(.data);
+        . = ALIGN(4); *libc.a:impure.o(.data);
+        . = ALIGN(4); *libc.a:locale.o(.data);
+        . = ALIGN(4); *libc.a:mallocr.o(.data);
         . = ALIGN(4); data/data_B1FE7C.o(.data);
         FILL(0xFF);
         . = 0xC00000; src/banim_data.o(.data.banim_array_len);
@@ -283,7 +299,7 @@ SECTIONS
         . = 0xEE0C00; data/data_banim_terrain.o(.data);
         FILL(0xFF);
         _banim_pal_start = 0xEF8000;
-        . = _banim_pal_start; 
+        . = _banim_pal_start;
         src/banim_pal_chara.o(.data.banim_pal_head);
         src/banim_pal_chara.o(.data.banim_pal_ptr_table);
         FILL(0x00);
@@ -294,6 +310,49 @@ SECTIONS
         . = 0xFE0000; data/data_FE0000.o(.data);
         . = 0xFFF000; data/data_FFF000.o(.data);
     } = 0
+
+  /* Stabs debugging sections.  */
+  .stab          0 : { *(.stab) }
+  .stabstr       0 : { *(.stabstr) }
+  .stab.excl     0 : { *(.stab.excl) }
+  .stab.exclstr  0 : { *(.stab.exclstr) }
+  .stab.index    0 : { *(.stab.index) }
+  .stab.indexstr 0 : { *(.stab.indexstr) }
+  .comment       0 : { *(.comment) }
+  .gnu.build.attributes : { *(.gnu.build.attributes .gnu.build.attributes.*) }
+  /* DWARF debug sections.
+     Symbols in the DWARF debugging sections are relative to the beginning
+     of the section so we begin them at 0.  */
+  /* DWARF 1 */
+  .debug          0 : { *(.debug) }
+  .line           0 : { *(.line) }
+  /* GNU DWARF 1 extensions */
+  .debug_srcinfo  0 : { *(.debug_srcinfo) }
+  .debug_sfnames  0 : { *(.debug_sfnames) }
+  /* DWARF 1.1 and DWARF 2 */
+  .debug_aranges  0 : { *(.debug_aranges) }
+  .debug_pubnames 0 : { *(.debug_pubnames) }
+  /* DWARF 2 */
+  .debug_info     0 : { *(.debug_info .gnu.linkonce.wi.*) }
+  .debug_abbrev   0 : { *(.debug_abbrev) }
+  .debug_line     0 : { *(.debug_line .debug_line.* .debug_line_end) }
+  .debug_frame    0 : { *(.debug_frame) }
+  .debug_str      0 : { *(.debug_str) }
+  .debug_loc      0 : { *(.debug_loc) }
+  .debug_macinfo  0 : { *(.debug_macinfo) }
+  /* SGI/MIPS DWARF 2 extensions */
+  .debug_weaknames 0 : { *(.debug_weaknames) }
+  .debug_funcnames 0 : { *(.debug_funcnames) }
+  .debug_typenames 0 : { *(.debug_typenames) }
+  .debug_varnames  0 : { *(.debug_varnames) }
+  /* DWARF 3 */
+  .debug_pubtypes 0 : { *(.debug_pubtypes) }
+  .debug_ranges   0 : { *(.debug_ranges) }
+  /* DWARF Extension.  */
+  .debug_macro    0 : { *(.debug_macro) }
+  .debug_addr     0 : { *(.debug_addr) }
+  .ARM.attributes 0 : { KEEP (*(.ARM.attributes)) KEEP (*(.gnu.attributes)) }
+  .note.gnu.arm.ident 0 : { KEEP (*(.note.gnu.arm.ident)) }
 
     /* Discard everything not specifically mentioned above. */
     /DISCARD/ :

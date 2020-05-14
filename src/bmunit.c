@@ -598,7 +598,7 @@ struct Unit* LoadUnit(const struct UnitDefinition* uDef) {
     ClearUnit(unit);
 
     UnitInitFromDefinition(unit, uDef);
-    UnitLoadStatsFromChracter(unit, unit->pCharacterData);
+    UnitLoadStatsFromCharacter(unit, unit->pCharacterData);
     UnitHideIfUnderRoof(unit);
 
     if (UNIT_IS_GORGON_EGG(unit))

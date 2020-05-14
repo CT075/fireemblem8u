@@ -353,7 +353,7 @@ s8 CanClassWieldWeaponType(u8 classId, u8 wpnType);
 struct Unit* LoadUnit(const struct UnitDefinition* uDef);
 void UnitInitFromDefinition(struct Unit* unit, const struct UnitDefinition* uDef);
 void UnitLoadItemsFromDefinition(struct Unit* unit, const struct UnitDefinition* uDef);
-void UnitLoadStatsFromChracter(struct Unit* unit, const struct CharacterData* character);
+void UnitLoadStatsFromCharacter(struct Unit* unit, const struct CharacterData* character);
 void FixROMUnitStructPtr(struct Unit* unit);
 void UnitLoadSupports(struct Unit* unit);
 void UnitAutolevelWExp(struct Unit* unit, const struct UnitDefinition* uDef);

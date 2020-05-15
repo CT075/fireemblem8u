@@ -692,7 +692,7 @@ void UnitLoadItemsFromDefinition(struct Unit* unit, const struct UnitDefinition*
         UnitAddItem(unit, MakeNewItem(uDef->items[i]));
 }
 
-void UnitLoadStatsFromChracter(struct Unit* unit, const struct CharacterData* character) {
+void UnitLoadStatsFromCharacter(struct Unit* unit, const struct CharacterData* character) {
     int i;
 
     unit->maxHP = character->baseHP + unit->pClassData->baseHP;

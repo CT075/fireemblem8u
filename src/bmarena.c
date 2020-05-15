@@ -1,5 +1,9 @@
 #include "global.h"
+
+#include <string.h>
+
 #include "bmunit.h"
+#include "bmitem.h"
 #include "rng.h"
 
 extern void LoadArenaOpponentStruct(void);
@@ -7,16 +11,20 @@ extern void LoadArenaWeapons(void);
 extern u8 AdjustArenaOpponentPower(void);
 extern u8 PrepareBalancedArenaFight(void);
 extern void sub_8031EA0(void);
-extern void sub_8031EE4(u8 idk);
+extern void sub_8031EE4(u8);
 extern void sub_8031FC8(void);
 
 extern void StoreRNState(u16 *seeds);
 extern void LoadRNState(const u16 *seeds);
-extern u16 gUnknown_0203A95E;
 
+extern u16 gUnknown_0203A95E;
 extern u8 gUnknown_0859D9FC;
 extern u8 gUnknown_0859DA4A;
 extern u8 gUnknown_0859DA22;
+extern u8 gUnknown_080D7F5C[8];
+extern u8 gUnknown_080D7F64[0x1C];
+
+extern struct Unit gUnknown_0203A910;
 
 int GetUnitBestWRankType(struct Unit *unit);
 int GetClassBestWRankType(const struct ClassData *cls);
@@ -334,9 +342,13 @@ int GetUnitArenaWeight(struct Unit *unit, s8 isEnemyWeaponMagic) {
     int statTotal;
     int con;
     int dmgRedStat;
+    int maxHP;
     const struct ClassData *cls;
 
-    statTotal = (unit->maxHP+unit->pow+unit->skl+unit->spd)*2 + unit->lck;
+    statTotal = unit->maxHP;
+    statTotal = (unit->pow + unit->skl) + statTotal + unit->spd;
+    statTotal *= 2;
+    statTotal += unit->lck;
     cls = unit->pClassData;
     con = cls->baseCon;
     con += unit->pCharacterData->baseCon;
@@ -424,3 +436,306 @@ int GetUnitArenaWeight(struct Unit *unit, s8 isEnemyWeaponMagic) {
 }
 
 #endif // NONMATCHING
+
+#if NONMATCHING
+
+// This function is *so weird*. As dumb as it looks, I promise that it is
+// basically what the real routine does (and I have no idea how it works)
+void LoadArenaOpponentStruct(void) {
+    struct UnitDefinition idk;
+    struct Unit *opponent;
+    u8 whateven;
+    u8 whateven2;
+    u8 writevalue;
+    s8 lv;
+    s8 other;
+    int i;
+
+    writevalue = 0;
+    opponent = &gUnknown_0203A910;
+
+    idk.charIndex = 0xFD;
+    idk.classIndex = gArenaData.opponentClassId;
+
+    // ?????
+    whateven = (-7) & idk.autolevel;
+    idk.autolevel = whateven;
+    whateven2 = (opponent->level << 3) | (7 & whateven);
+    idk.autolevel = whateven2;
+    idk.autolevel = whateven2 | 1;
+
+    idk.items[0] = writevalue;
+    idk.items[1] = writevalue;
+    idk.items[2] = writevalue;
+    idk.items[3] = writevalue;
+    idk.ai.ai1 = writevalue;
+    idk.ai.ai2 = writevalue;
+    idk.ai.ai3 = writevalue;
+    idk.ai.ai4 = writevalue;
+
+    ClearUnit(opponent);
+
+    opponent->index = 0x80;
+    UnitInitFromDefinition(opponent, &idk);
+    UnitLoadStatsFromCharacter(opponent, opponent->pCharacterData);
+
+    lv = opponent->level;
+    if (gRAMChapterData.chapterStateBits & 0x40) {
+        other = lv * 24;
+    }
+    else {
+        other = lv * 12;
+    }
+
+    opponent->level = other / 10;
+
+    UnitAutolevel(opponent);
+
+    opponent->level = lv;
+
+    for (i = 0 ; i <= 7 ; i += 1) {
+        if (opponent->ranks[i]) {
+            opponent->ranks[i] = 0xb5;
+        }
+    }
+
+    if (opponent->level <= 0) {
+        opponent->level = 1;
+    }
+
+    if (opponent->level > 20) {
+        opponent->level = 20;
+    }
+
+    UnitCheckStatCaps(opponent);
+    SetUnitHp(opponent, GetUnitMaxHp(opponent));
+}
+
+#else // NONMATCHING
+
+__attribute__((naked))
+void LoadArenaOpponentStruct(void) {
+    asm("\n\
+      .syntax unified\n\
+    push {r4, r5, r6, lr}\n\
+	sub sp, #0x14\n\
+	ldr r6, _08031B00  @ gUnknown_0203A910\n\
+	mov r1, sp\n\
+	movs r3, #0\n\
+	movs r0, #0xfd\n\
+	strb r0, [r1]\n\
+	ldr r4, _08031B04  @ gArenaData\n\
+	ldrb r0, [r4, #0x10]\n\
+	strb r0, [r1, #1]\n\
+	ldrb r0, [r1, #3]\n\
+	movs r2, #7\n\
+	negs r2, r2\n\
+	ands r2, r0\n\
+	strb r2, [r1, #3]\n\
+	mov r5, sp\n\
+	ldrb r1, [r4, #0x12]\n\
+	lsls r1, r1, #3\n\
+	movs r0, #7\n\
+	ands r0, r2\n\
+	orrs r0, r1\n\
+	strb r0, [r5, #3]\n\
+	mov r2, sp\n\
+	movs r1, #1\n\
+	orrs r0, r1\n\
+	strb r0, [r2, #3]\n\
+	mov r0, sp\n\
+	strb r3, [r0, #0xc]\n\
+	strb r3, [r0, #0xd]\n\
+	strb r3, [r0, #0xe]\n\
+	strb r3, [r0, #0xf]\n\
+	strb r3, [r0, #0x10]\n\
+	strb r3, [r0, #0x10]\n\
+	strb r3, [r0, #0x11]\n\
+	strb r3, [r0, #0x12]\n\
+	strb r3, [r0, #0x13]\n\
+	adds r0, r6, #0\n\
+	bl ClearUnit\n\
+	movs r0, #0x80\n\
+	strb r0, [r6, #0xb]\n\
+	adds r0, r6, #0\n\
+	mov r1, sp\n\
+	bl UnitInitFromDefinition\n\
+	ldr r1, [r6]\n\
+	adds r0, r6, #0\n\
+	bl UnitLoadStatsFromCharacter\n\
+	movs r4, #8\n\
+	ldrsb r4, [r6, r4]\n\
+	ldr r0, _08031B08  @ gRAMChapterData\n\
+	ldrb r1, [r0, #0x14]\n\
+	movs r0, #0x40\n\
+	ands r0, r1\n\
+	cmp r0, #0\n\
+	beq _08031B0C\n\
+	lsls r0, r4, #1\n\
+	adds r0, r0, r4\n\
+	lsls r0, r0, #3\n\
+	b _08031B12\n\
+	.align 2, 0\n\
+_08031B00: .4byte gUnknown_0203A910\n\
+_08031B04: .4byte gArenaData\n\
+_08031B08: .4byte gRAMChapterData\n\
+_08031B0C:\n\
+	lsls r0, r4, #1\n\
+	adds r0, r0, r4\n\
+	lsls r0, r0, #2\n\
+_08031B12:\n\
+	movs r1, #0xa\n\
+	bl __divsi3\n\
+	strb r0, [r6, #8]\n\
+	adds r0, r6, #0\n\
+	bl UnitAutolevel\n\
+	strb r4, [r6, #8]\n\
+	movs r2, #0\n\
+	adds r3, r6, #0\n\
+	adds r3, #0x28\n\
+	movs r4, #0xb5\n\
+_08031B2A:\n\
+	adds r1, r3, r2\n\
+	ldrb r0, [r1]\n\
+	cmp r0, #0\n\
+	beq _08031B34\n\
+	strb r4, [r1]\n\
+_08031B34:\n\
+	adds r2, #1\n\
+	cmp r2, #7\n\
+	ble _08031B2A\n\
+	movs r0, #8\n\
+	ldrsb r0, [r6, r0]\n\
+	cmp r0, #0\n\
+	bgt _08031B46\n\
+	movs r0, #1\n\
+	strb r0, [r6, #8]\n\
+_08031B46:\n\
+	movs r0, #8\n\
+	ldrsb r0, [r6, r0]\n\
+	cmp r0, #0x14\n\
+	ble _08031B52\n\
+	movs r0, #0x14\n\
+	strb r0, [r6, #8]\n\
+_08031B52:\n\
+	adds r0, r6, #0\n\
+	bl UnitCheckStatCaps\n\
+	adds r0, r6, #0\n\
+	bl GetUnitMaxHp\n\
+	adds r1, r0, #0\n\
+	adds r0, r6, #0\n\
+	bl SetUnitHp\n\
+	add sp, #0x14\n\
+	pop {r4, r5, r6}\n\
+	pop {r0}\n\
+	bx r0\n\
+      .syntax divided\n\
+    ");
+}
+
+#endif // NONMATCHING
+
+void LoadArenaWeapons(void) {
+    char candidates[8];
+
+    memcpy(candidates, gUnknown_080D7F5C, 8);
+
+    gArenaData.playerWeapon = MakeNewItem(candidates[gArenaData.playerWpnType]);
+    gArenaData.opponentWeapon = MakeNewItem(candidates[gArenaData.opponentWpnType]);
+
+    gArenaData.range = 1;
+
+    if (gArenaData.playerWpnType == 3) {
+        gArenaData.range = 2;
+    }
+
+    if (gArenaData.opponentWpnType == 3) {
+        gArenaData.range = 2;
+    }
+}
+
+#if NONMATCHING
+
+// The only difference is that the gUnknown_080D7F64 variable pool is in the
+// wrong place; it's even correct wrt register alloc
+u16 GetArenaBetterItem(int wptype) {
+    u8 candidates[0x1C];
+    u16 wp;
+    u8 *ptr;
+
+    wp = wptype;
+
+    memcpy(candidates, gUnknown_080D7F64, 0x1A);
+
+    ptr = candidates;
+
+    do {
+        if (GetItemIndex(wp) == *ptr) {
+            ptr += 1;
+            if (*ptr) {
+                return MakeNewItem(*ptr);
+            }
+            else {
+                return wp;
+            }
+        }
+        else {
+            ptr += 1;
+        }
+    }
+    while (*ptr != 0xFF);
+}
+
+#else // NONMATCHING
+
+__attribute__((naked))
+u16 GetArenaBetterItem(int wptype) {
+    asm("\n\
+      .syntax unified\n\
+	push {r4, r5, lr}\n\
+	sub sp, #0x1c\n\
+	lsls r0, r0, #0x10\n\
+	lsrs r5, r0, #0x10\n\
+	ldr r1, _08031BD8  @ gUnknown_080D7F64\n\
+	mov r0, sp\n\
+	movs r2, #0x1a\n\
+	bl memcpy\n\
+	mov r4, sp\n\
+	b _08031C02\n\
+	.align 2, 0\n\
+_08031BD8: .4byte gUnknown_080D7F64\n\
+_08031BDC:\n\
+	adds r0, r5, #0\n\
+	bl GetItemIndex\n\
+	adds r1, r0, #0\n\
+	ldrb r2, [r4]\n\
+	cmp r1, r2\n\
+	bne _08031C00\n\
+	adds r4, #1\n\
+	ldrb r0, [r4]\n\
+	cmp r0, #0\n\
+	beq _08031BFC\n\
+	bl MakeNewItem\n\
+	lsls r0, r0, #0x10\n\
+	lsrs r0, r0, #0x10\n\
+	b _08031C08\n\
+_08031BFC:\n\
+	adds r0, r5, #0\n\
+	b _08031C08\n\
+_08031C00:\n\
+	adds r4, #1\n\
+_08031C02:\n\
+	ldrb r1, [r4]\n\
+	cmp r1, #0xff\n\
+	bne _08031BDC\n\
+_08031C08:\n\
+	add sp, #0x1c\n\
+	pop {r4, r5}\n\
+	pop {r1}\n\
+	bx r1\n\
+      .syntax divided\n\
+    ");
+}
+
+#endif
+

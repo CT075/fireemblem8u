@@ -391,8 +391,8 @@ void InitDifficultySelectScreen(struct DifficultyMenuProc * proc)
     BG_EnableSyncByMask(BG0_SYNC_BIT | BG1_SYNC_BIT);
 
     proc->unk_34 = StartDrawDifficultyMenuSprites(proc);
-    //proc->unk_30 = 0;
-    proc->unk_34->unk_2b = 0;
+    proc->unk_30 = 1;
+    proc->unk_34->unk_2b = 1;
     proc->unk_34->unk_2c = gUnknown_08A209FC[proc->unk_30].a;
     proc->unk_34->unk_2e = gUnknown_08A209FC[proc->unk_30].b;
 
@@ -403,7 +403,7 @@ void InitDifficultySelectScreen(struct DifficultyMenuProc * proc)
 void DifficultySelect_Init(struct DifficultyMenuProc * proc)
 {
     proc->unk_30 = 1;
-    proc->unk_2c = 1;
+    proc->unk_2c = 0;
     InitDifficultySelectScreen(proc);
     return;
 }
@@ -644,7 +644,6 @@ void DrawDifficultyMenuCursorMaybe(struct DifficultyMenuSpritesProc * proc)
         }
     }
 
-    // TODO: fix this
     PutSpriteExt(
         4, proc->unk_2c, OAM0_Y(proc->unk_2e + gUnknown_08A20B14[(proc->unk_2a >> 3) & 7] - 16), gSprite_08A20A98, OAM2_PAL(3));
 
